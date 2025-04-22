@@ -37,9 +37,16 @@ function proverka(){
   tochki.value = newTochki
 
   let interval = setInterval(() => {
-    radar.value = radar.value + (1920 * 10) / text.value
-    console.log(radar.value)
-  }, 1000)
+    let newValue = radar.value + (1920 * 10) / text.value
+    let stopCoord = window.innerWidth - (1920 * 10) / text.value
+    console.log(newValue, stopCoord)
+    if (newValue >= stopCoord) {
+      radar.value = 1900
+      clearInterval(interval)
+      return
+    }
+    radar.value = newValue
+  }, 300)
 }
 </script>
 
@@ -68,6 +75,7 @@ function proverka(){
 .relsa {
   position: relative;
   background-color: #1D1D1D;
+  margin-top: 25px;
   width: 100%;
   height: 50px;
 }
@@ -81,7 +89,7 @@ function proverka(){
 .defectx{
   position: absolute;
   left: 0;
-  width: 16px;
+  width: 10px;
   height: 16px;
   background-color: red;
 }
