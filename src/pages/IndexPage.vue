@@ -4,6 +4,9 @@ let text = ref('')
 let text1 = ref('')
 let tochki = ref([])
 let radar = ref(0)
+let blizostktochke = ref('')
+let cords = ref ([])
+let newTochki = ref([])
 
 function proverka(){
   if(text.value===''){
@@ -18,35 +21,44 @@ function proverka(){
   if (text1.value===''){
     alert('Напишите координат дефекта')
   }
-  //if (isNaN(text1.value) === true) {
-  //  alert('Напишите координат дефекта целым числом')
-  // }
-  // if (text1.value < 0) {
-  //   alert('Напишите координат дефекта положительным числом')
-  // }
-  // if (text1.value > 10) {
-  //   let tochka = text.value / 10
-  //   tochki.value = tochka
-  // }
   tochki.value = text1.value.split(', ')
-  let newTochki = []
   for (let t of tochki.value) {
     let x = (1920 * t) / text.value
-    newTochki.push(x)
+    newTochki.value.push(x)
+
   }
-  tochki.value = newTochki
+  tochki.value = newTochki.value
 
   let interval = setInterval(() => {
+
     let newValue = radar.value + (1920 * 10) / text.value
     let stopCoord = window.innerWidth - (1920 * 10) / text.value
     console.log(newValue, stopCoord)
     if (newValue >= stopCoord) {
       radar.value = 1900
+      cords.value.push(1900)
+      setTimeout(() => {
+        radar.value = 0
+        cords.value.push(0)
+      }, 1000)
       clearInterval(interval)
-      return
     }
-    radar.value = newValue
+    else {
+      radar.value = newValue
+      cords.value.push(newValue)
+    }
+
+    for (let tochka of newTochki.value) {
+      if ((radar.value - 192 >= tochka && tochka <= radar.value) && (tochka <= radar.value + 192 && radar.value >= tochka)) {
+        console.log('111', radar.value)
+        blizostktochke = "Желтый свет (Дефектов в пределах 10 см нет)"
+      }
+    }
+
   }, 300)
+
+
+
 }
 </script>
 
@@ -68,6 +80,14 @@ function proverka(){
       :style="{ 'left': `${ defect }px`}"
       class="defectx"
     ></div>
+  </div>
+  <div>Шаги проверки</div>
+  <div
+   v-for="(cord, index) in cords"
+  >
+    <div>Шаг {{index + 1}} : позиция {{ (`${ ((cord * text) / 1920).toFixed(0) }`) }}</div>
+    <div>Левая лампа: {{blizostktochke}}</div>
+    <div>Правая лампа:</div>
   </div>
 </template>
 
