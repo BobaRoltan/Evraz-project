@@ -36,25 +36,41 @@ function proverka(){
     console.log(newValue, stopCoord)
     if (newValue >= stopCoord) {
       radar.value = 1900
-      cords.value.push(1900)
+      cords.value.push({
+        x: 1900,
+      })
       setTimeout(() => {
         radar.value = 0
-        cords.value.push(0)
+        cords.value.push({
+          x: 0,
+        })
       }, 1000)
       clearInterval(interval)
     }
     else {
       radar.value = newValue
-      cords.value.push(newValue)
+      cords.value.push({
+        x: newValue,
+      })
     }
 
     for (let tochka of newTochki.value) {
-      if ((radar.value - 192 >= tochka && tochka <= radar.value) && (tochka <= radar.value + 192 && radar.value >= tochka)) {
-        console.log('111', radar.value)
-        blizostktochke = "Желтый свет (Дефектов в пределах 10 см нет)"
+      let gap = (1920 * 10) / text.value
+      let gop = (1920 * 5) / text.value
+      let index = cords.value.length - 1;
+      if (tochka <= radar.value + gap  && radar.value + gop <= tochka) {
+        cords.value[index].left = 'Желтый свет (Дефект в пределах 10 см)'
+      }
+      else {
+        cords.value[index].left = 'Зеленый свет (Дефектов нет)'
+      }
+      if (tochka >= radar.value - gap  && radar.value - gop >= tochka) {
+        cords.value[index].right = 'Желтый свет (Дефект в пределах 10 см)'
+      }
+      else {
+        cords.value[index].right = 'Зеленый свет (Дефектов нет)'
       }
     }
-
   }, 300)
 
 
@@ -85,9 +101,9 @@ function proverka(){
   <div
    v-for="(cord, index) in cords"
   >
-    <div>Шаг {{index + 1}} : позиция {{ (`${ ((cord * text) / 1920).toFixed(0) }`) }}</div>
-    <div>Левая лампа: {{blizostktochke}}</div>
-    <div>Правая лампа:</div>
+    <div>Шаг {{index + 1}} : позиция {{ (`${ ((cord.x * text) / 1920).toFixed(0) }`) }}</div>
+    <div>Левая лампа: {{ cord.right }}</div>
+    <div>Правая лампа: {{ cord.left }}</div>
   </div>
 </template>
 
