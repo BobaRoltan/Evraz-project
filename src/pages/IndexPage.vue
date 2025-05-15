@@ -21,9 +21,11 @@ function proverka(){
   if (text1.value===''){
     alert('Напишите координат дефекта')
   }
+  cords.value = []
+  newTochki.value = []
   tochki.value = text1.value.split(', ')
   for (let t of tochki.value) {
-    let x = (1920 * t) / text.value
+    let x = (1900 * t) / text.value
     newTochki.value.push(x)
 
   }
@@ -31,19 +33,19 @@ function proverka(){
 
   let interval = setInterval(() => {
 
-    let newValue = radar.value + (1920 * 10) / text.value
-    let stopCoord = window.innerWidth - (1920 * 9) / text.value
+    let newValue = radar.value + (1900 * 10) / text.value
+    let stopCoord = window.innerWidth - (1900 * 9) / text.value
     console.log(newValue, stopCoord)
     if (newValue >= stopCoord) {
-      radar.value = 1900
-      cords.value.push({
-        x: 1900,
-      })
+      // radar.value = 1900
+      // cords.value.push({
+      //   x: 1900,
+      // })
       setTimeout(() => {
         radar.value = 0
-        cords.value.push({
-          x: 0,
-        })
+        // cords.value.push({
+        //   x: 0,
+        // })
       }, 1000)
       clearInterval(interval)
     }
@@ -54,17 +56,23 @@ function proverka(){
       })
     }
 
-    let gap = (1920 * 10) / text.value
-    let gop = (1920 * 5) / text.value
+    let gap = (1900 * 10) / text.value
+    let gop = (1900 * 5) / text.value
     let index = cords.value.length - 1;
 
     let left_defect = newTochki.value.find(tochka => {
-      return tochka <= radar.value + gap  && radar.value <= tochka;
+      return tochka < radar.value + gap  && radar.value < tochka;
+    })
+
+    let fulldefect = newTochki.value.find(tochka => {
+      return tochka === radar.value
     })
 
     let right_defect = newTochki.value.find(tochka => {
-      return tochka >= radar.value - gap  && radar.value >= tochka
+      return tochka > radar.value - gap  && radar.value > tochka
     });
+
+
 
     cords.value[index].left = 'Зеленый свет (Дефектов нет)'
     if (left_defect) {
@@ -76,12 +84,19 @@ function proverka(){
       cords.value[index].right = 'Желтый свет (Дефект в пределах 10 см)'
 
     }
+    cords.value[index].centr = 'Зеленый свет (Дефектов под радаром нет)'
+    if(fulldefect){
+      cords.value[index].centr = 'Красный свет(Радар стоит на девекте)'
+    }
   }, 300)
 }
 
 function getColor(cord, side) {
   if (cord[side] === 'Желтый свет (Дефект в пределах 10 см)') {
     return 'yellow';
+  }
+  if (cord[side] === 'Красный свет(Радар стоит на девекте)') {
+    return 'red'
   }
   return 'green';
 }
@@ -97,7 +112,7 @@ function getColor(cord, side) {
   </div>
   <q-btn color="orange" label="Сканирование" @click="proverka"></q-btn>
   <div
-    v-for="cord in cords.slice(0, -2)"
+    v-for="cord in cords"
     :style="{ left: `${ cord.x }px`}"
     style="position: absolute;"
   >
@@ -107,9 +122,15 @@ function getColor(cord, side) {
     ></q-badge>
 
     <q-badge
+      :color="getColor(cord, 'centr')"
+      rounded
+    ></q-badge>
+
+    <q-badge
       :color="getColor(cord, 'left')"
       rounded
       ></q-badge>
+
   </div>
 
   <div class="relsa">
@@ -125,13 +146,14 @@ function getColor(cord, side) {
   </div>
 
 
-  <div>Шаги проверки</div>
+  <div v-if="cords.length">Шаги проверки</div>
   <div
    v-for="(cord, index) in cords"
   >
-    <div>Шаг {{index + 1}} : позиция {{ (`${ ((cord.x * text) / 1920).toFixed(0) }`) }}</div>
+    <div>Шаг {{index + 1}} : позиция {{ (`${ ((cord.x * text) / 1900).toFixed(0) }`) }}</div>
     <div>Левая лампа: {{ cord.right }}</div>
     <div>Правая лампа: {{ cord.left }}</div>
+    <div>Средняя лампа: {{cord.centr}}</div>
   </div>
 </template>
 
