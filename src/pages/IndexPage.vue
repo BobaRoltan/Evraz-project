@@ -7,7 +7,6 @@ let radar = ref(0)
 let cords = ref ([])
 let newTochki = ref([])
 
-
 function proverka(){
   if(text.value===''){
     alert('Напишите длину рельса')
@@ -60,42 +59,43 @@ function proverka(){
     let gop = (1900 * 5) / text.value
     let index = cords.value.length - 1;
 
-    let left_defect = newTochki.value.find(tochka => {
-      return tochka < radar.value + gap  && radar.value < tochka;
+    let right_defect1 = newTochki.value.find(tochka => {
+      return tochka < radar.value + gap  && radar.value + gop < tochka;
     })
 
     let fulldefect = newTochki.value.find(tochka => {
-      return tochka === radar.value
+      return tochka >= radar.value && radar.value + gop > tochka;
     })
 
-    let right_defect = newTochki.value.find(tochka => {
-      return tochka > radar.value - gap  && radar.value > tochka
+    let left_defect = newTochki.value.find(tochka => {
+      return tochka > radar.value - gap  && radar.value - gop > tochka
     });
 
 
 
     cords.value[index].left = 'Зеленый свет (Дефектов нет)'
-    if (left_defect) {
-      cords.value[index].left = 'Желтый свет (Дефект в пределах 10 см)'
+    if (right_defect1) {
+      cords.value[index].left = 'Желтый свет (Дефект в пределах 5-10 см)'
     }
 
+
     cords.value[index].right = 'Зеленый свет (Дефектов нет)'
-    if (right_defect) {
-      cords.value[index].right = 'Желтый свет (Дефект в пределах 10 см)'
+    if (left_defect) {
+      cords.value[index].right = 'Желтый свет (Дефект в пределах 5-10 см)'
 
     }
     cords.value[index].centr = 'Зеленый свет (Дефектов под радаром нет)'
     if(fulldefect){
-      cords.value[index].centr = 'Красный свет(Радар стоит на девекте)'
+      cords.value[index].left = 'Красный свет (Дефект в пределах 0-5 см)'
     }
   }, 300)
 }
 
 function getColor(cord, side) {
-  if (cord[side] === 'Желтый свет (Дефект в пределах 10 см)') {
+  if (cord[side] === 'Желтый свет (Дефект в пределах 5-10 см)') {
     return 'yellow';
   }
-  if (cord[side] === 'Красный свет(Радар стоит на девекте)') {
+  if (cord[side] === 'Красный свет (Дефект в пределах 0-5 см)') {
     return 'red'
   }
   return 'green';
@@ -103,12 +103,16 @@ function getColor(cord, side) {
 </script>
 
 <template>
-   <div style="display: flex; align-items: center;">
-     Напишите длину рельса: <q-input  v-model="text" class="inp" />см
+  <div class="privet">
+    <p>Приветствую, посетитель. Этот сайт был создан и предназначен для нахождения дефектов на рельсе.</p>
+    <p>Для начала напиши длину рельсы. Затем напишите координату дефекта. Нажмите кнопу "Сканирование" и ожидайте.</p>
+  </div>
+   <div style="display: flex; align-items: center;" class="priv">
+     Напишите длину рельса: <q-input  v-model="text" class="inp p"  />см
 
    </div>
-  <div style="display: flex; align-items: center;">
-    Напишите координат дефекта: <q-input v-model="text1" class="inp" />см
+  <div style="display: flex; align-items: center;" class="priv">
+    Напишите координат дефекта: <q-input v-model="text1" class="inp p" />см
   </div>
   <q-btn color="orange" label="Сканирование" @click="proverka"></q-btn>
   <div
@@ -120,12 +124,6 @@ function getColor(cord, side) {
       :color="getColor(cord, 'right')"
       rounded
     ></q-badge>
-
-    <q-badge
-      :color="getColor(cord, 'centr')"
-      rounded
-    ></q-badge>
-
     <q-badge
       :color="getColor(cord, 'left')"
       rounded
@@ -146,18 +144,28 @@ function getColor(cord, side) {
   </div>
 
 
-  <div v-if="cords.length">Шаги проверки</div>
+  <div class="priv" v-if="cords.length">Шаги проверки</div>
+  <div class="priv" v-if="cords.length">Общее количество шагов: {{cords.length}}</div>
   <div
    v-for="(cord, index) in cords"
   >
-    <div>Шаг {{index + 1}} : позиция {{ (`${ ((cord.x * text) / 1900).toFixed(0) }`) }}</div>
-    <div>Левая лампа: {{ cord.right }}</div>
-    <div>Правая лампа: {{ cord.left }}</div>
-    <div>Средняя лампа: {{cord.centr}}</div>
+
+    <div class="priv">Шаг {{index + 1}} : позиция {{ (`${ ((cord.x * text) / 1900).toFixed(0) }`) }}</div>
+    <div class="priv">Левая лампа: {{ cord.right }}</div>
+    <div class="priv">Правая лампа: {{ cord.left }}</div>
   </div>
 </template>
 
 <style>
+.p{
+  font-size : 18px;
+}
+.priv{
+  font-size : 20px;
+}
+.privet{
+  font-size : 18px;
+}
 .relsa {
   position: relative;
   background-color: #1D1D1D;

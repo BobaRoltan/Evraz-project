@@ -1,16 +1,11 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
       <q-toolbar>
         <q-toolbar-title>
-          Сканирование рельсы
-        </q-toolbar-title>
+          <h4 class="zagolovok">Сканирование рельсы</h4>
+        </q-toolbar-title >
         <img src="https://social.evraz.com/assets/themes/evraz/images/logo_invest_header_new.png">
-
-<!--        <div>Евраз</div>-->
       </q-toolbar>
-    </q-header>
-
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -72,3 +67,9 @@ function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 </script>
+<style>
+.zagolovok{
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+</style>
