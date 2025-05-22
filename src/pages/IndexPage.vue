@@ -60,42 +60,48 @@ function proverka(){
     let index = cords.value.length - 1;
 
     let right_defect1 = newTochki.value.find(tochka => {
-      return tochka < radar.value + gap  && radar.value + gop < tochka;
+      return tochka < radar.value + gap  && radar.value + gop <= tochka;
     })
 
-    let fulldefect = newTochki.value.find(tochka => {
+    let right_fulldefect = newTochki.value.find(tochka => {
       return tochka >= radar.value && radar.value + gop > tochka;
     })
 
     let left_defect = newTochki.value.find(tochka => {
-      return tochka > radar.value - gap  && radar.value - gop > tochka
+      return tochka > radar.value - gap  && radar.value - gop >= tochka
     });
-
+    let left_fulldefect = newTochki.value.find(tochka => {
+      return tochka <= radar.value && radar.value - gop < tochka;
+    })
 
 
     cords.value[index].left = 'Зеленый свет (Дефектов нет)'
     if (right_defect1) {
-      cords.value[index].left = 'Желтый свет (Дефект в пределах 5-10 см)'
+      cords.value[index].left = 'Желтый свет (Дефект в пределах от 5 до 10 см)'
     }
 
 
     cords.value[index].right = 'Зеленый свет (Дефектов нет)'
     if (left_defect) {
-      cords.value[index].right = 'Желтый свет (Дефект в пределах 5-10 см)'
+      cords.value[index].right = 'Желтый свет (Дефект в пределах от 5 до 10 см)'
 
     }
     cords.value[index].centr = 'Зеленый свет (Дефектов под радаром нет)'
-    if(fulldefect){
-      cords.value[index].left = 'Красный свет (Дефект в пределах 0-5 см)'
+    if(right_fulldefect){
+      cords.value[index].left = 'Красный свет (Дефект в пределах от 0 до 5 см)'
+    }
+    cords.value[index].centr = 'Зеленый свет (Дефектов под радаром нет)'
+    if(left_fulldefect){
+      cords.value[index].right = 'Красный свет (Дефект в пределах от 0 до 5 см)'
     }
   }, 300)
 }
 
 function getColor(cord, side) {
-  if (cord[side] === 'Желтый свет (Дефект в пределах 5-10 см)') {
+  if (cord[side] === 'Желтый свет (Дефект в пределах от 5 до 10 см)') {
     return 'yellow';
   }
-  if (cord[side] === 'Красный свет (Дефект в пределах 0-5 см)') {
+  if (cord[side] === 'Красный свет (Дефект в пределах от 0 до 5 см)') {
     return 'red'
   }
   return 'green';
