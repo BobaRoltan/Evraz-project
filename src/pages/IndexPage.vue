@@ -9,20 +9,28 @@ let newTochki = ref([])
 
 function proverka(){
   if(text.value===''){
-    alert('Напишите длину рельса')
+    return alert('Напишите длину рельса')
   }
   if (isNaN(text.value) === true || Number.isInteger(+text.value) === false) {
-    alert('Напишите длину рельса целым числом')
+    return alert('Напишите длину рельса целым числом')
   }
   if (text.value < 0) {
-    alert('Напишите длину рельса положительным числом')
+    return alert('Напишите длину рельса положительным числом')
   }
   if (text1.value===''){
-    alert('Напишите координат дефекта')
+    return alert('Напишите координат дефекта')
+  }
+  let tchki = text1.value.split(', ')
+  for (let tochka of tchki) {
+    if (+tochka >= +text.value || +tochka <= 0) {
+      return alert('Дефект на ' + tochka + ' см не находится на рельсе')
+    }
   }
   cords.value = []
   newTochki.value = []
-  tochki.value = text1.value.split(', ')
+  tochki.value = tchki
+
+
   for (let t of tochki.value) {
     let x = (1900 * t) / text.value
     newTochki.value.push(x)
@@ -49,7 +57,7 @@ function proverka(){
       clearInterval(interval)
     }
     else {
-      radar.value = newValue
+      radar.value = newValue // Здесь проблема
       cords.value.push({
         x: newValue,
       })
@@ -59,66 +67,209 @@ function proverka(){
     let gop = (1900 * 5) / text.value
     let index = cords.value.length - 1;
 
+
+    let right_defect0 = newTochki.value.find(tochka => {
+      return (1900 * 0) / text.value + radar.value === tochka
+    })
     let right_defect1 = newTochki.value.find(tochka => {
-      return tochka < radar.value + gap  && radar.value + gop <= tochka;
+      return (1900 * 1) / text.value + radar.value === tochka
     })
-
-    let right_fulldefect = newTochki.value.find(tochka => {
-      return tochka >= radar.value && radar.value + gop > tochka;
+    let right_defect2 = newTochki.value.find(tochka => {
+      return (1900 * 2) / text.value + radar.value === tochka
     })
-
-    let left_defect = newTochki.value.find(tochka => {
-      return tochka > radar.value - gap  && radar.value - gop >= tochka
+    let right_defect3 = newTochki.value.find(tochka => {
+      return (1900 * 3) / text.value + radar.value === tochka
+    })
+    let right_defect4 = newTochki.value.find(tochka => {
+      return (1900 * 4) / text.value + radar.value === tochka
+    })
+    let right_defect5 = newTochki.value.find(tochka => {
+      return (1900 * 5) / text.value + radar.value === tochka
+    })
+    let right_defect6 = newTochki.value.find(tochka => {
+      return (1900 * 6) / text.value + radar.value === tochka
+    })
+    let right_defect7 = newTochki.value.find(tochka => {
+      return (1900 * 7) / text.value + radar.value === tochka
+    })
+    let right_defect8 = newTochki.value.find(tochka => {
+      return (1900 * 8) / text.value + radar.value === tochka
+    })
+    let right_defect9 = newTochki.value.find(tochka => {
+      return (1900 * 9) / text.value + radar.value === tochka
+    })
+    let left_defect9 = newTochki.value.find(tochka => {
+      return radar.value - (1900 * 9) / text.value === tochka
     });
-    let left_fulldefect = newTochki.value.find(tochka => {
-      return tochka <= radar.value && radar.value - gop < tochka;
-    })
+    let left_defect8 = newTochki.value.find(tochka => {
+      return radar.value - (1900 * 8) / text.value === tochka
+    });
+    let left_defect7 = newTochki.value.find(tochka => {
+      return radar.value - (1900 * 7) / text.value === tochka
+    });
+    let left_defect6 = newTochki.value.find(tochka => {
+      return radar.value - (1900 * 6) / text.value === tochka
+    });
+    let left_defect5 = newTochki.value.find(tochka => {
+      return radar.value - (1900 * 5) / text.value === tochka
+    });
+    let left_defect4 = newTochki.value.find(tochka => {
+      return radar.value - (1900 * 4) / text.value === tochka
+    });
+    let left_defect3 = newTochki.value.find(tochka => {
+      return radar.value - (1900 * 3) / text.value === tochka
+    });
+    let left_defect2 = newTochki.value.find(tochka => {
+      return radar.value - (1900 * 2) / text.value === tochka
+    });
+    let left_defect1 = newTochki.value.find(tochka => {
+      return radar.value - (1900 * 1) / text.value === tochka
+    });
+    let left_defect0 = newTochki.value.find(tochka => {
+      return radar.value - (1900 * 0) / text.value === tochka
+    });
 
 
-    cords.value[index].left = 'Зеленый свет (Дефектов нет)'
-    if (right_defect1) {
-      cords.value[index].left = 'Желтый свет (Дефект в пределах от 5 до 10 см)'
+
+    cords.value[index].right = 'Зеленый свет (Дефектов от ' + (radar.value * text.value / 1900 - 9) + ' см ' + 'до ' + (radar.value * text.value / 1900) + ' см нет)'
+    cords.value[index].left = 'Зеленый свет (Дефектов от ' + (radar.value * text.value / 1900) + ' см ' + 'до ' + (radar.value * text.value / 1900 + 9) + ' см нет)'
+    if(right_defect1){
+      cords.value[index].left = 'Красный свет (Дефект на ' + (radar.value * text.value / 1900 + 1) + ' см)'
+    }
+    else if(right_defect2){
+      cords.value[index].left = 'Красный свет (Дефект на ' + (radar.value * text.value / 1900 + 2) + ' см)'
+    }
+    else if(right_defect3){
+      cords.value[index].left = 'Красный свет (Дефект на ' + (radar.value * text.value / 1900 + 3) + ' см)'
+    }
+    else if(right_defect4){
+      cords.value[index].left = 'Красный свет (Дефект на ' + (radar.value * text.value / 1900 + 4) + ' см)'
+    }
+    else if(right_defect5){
+      cords.value[index].left = 'Желтый свет (Дефект на ' + (radar.value * text.value / 1900 + 5) + ' см)'
+    }
+    else if(right_defect6){
+      cords.value[index].left = 'Желтый свет (Дефект на ' + (radar.value * text.value / 1900 + 6) + ' см)'
+    }
+    else if(right_defect7){
+      cords.value[index].left = 'Желтый свет (Дефект на ' + (radar.value * text.value / 1900 + 7) + ' см)'
+    }
+    else if(right_defect8){
+      cords.value[index].left = 'Желтый свет (Дефект на ' + (radar.value * text.value / 1900 + 8) + ' см)'
+    }
+    else if(right_defect9){
+      cords.value[index].left = 'Желтый свет (Дефект на ' + (radar.value * text.value / 1900 + 9) + ' см)'
+    }
+    else if(right_defect0){
+      cords.value[index].left = 'Красный свет (Дефект на ' + (radar.value * text.value / 1900) + ' см)'
     }
 
-
-    cords.value[index].right = 'Зеленый свет (Дефектов нет)'
-    if (left_defect) {
-      cords.value[index].right = 'Желтый свет (Дефект в пределах от 5 до 10 см)'
-
+    if(left_defect9){
+      cords.value[index].right = 'Желтый свет (Дефект на ' + (radar.value * text.value / 1900 - 9) + ' см)'
     }
-    cords.value[index].centr = 'Зеленый свет (Дефектов под радаром нет)'
-    if(right_fulldefect){
-      cords.value[index].left = 'Красный свет (Дефект в пределах от 0 до 5 см)'
+    if(left_defect8){
+      cords.value[index].right = 'Желтый свет (Дефект на ' + (radar.value * text.value / 1900 - 8) + ' см)'
     }
-    cords.value[index].centr = 'Зеленый свет (Дефектов под радаром нет)'
-    if(left_fulldefect){
-      cords.value[index].right = 'Красный свет (Дефект в пределах от 0 до 5 см)'
+    if(left_defect7){
+      cords.value[index].right = 'Желтый свет (Дефект на ' + (radar.value * text.value / 1900 - 7) + ' см)'
+    }
+    if(left_defect6){
+      cords.value[index].right = 'Желтый свет (Дефект на ' + (radar.value * text.value / 1900 - 6) + ' см)'
+    }
+    if(left_defect5){
+      cords.value[index].right = 'Желтый свет (Дефект на ' + (radar.value * text.value / 1900 - 5) + ' см)'
+    }
+    if(left_defect4){
+      cords.value[index].right = 'Красный свет (Дефект на ' + (radar.value * text.value / 1900 - 4) + ' см)'
+    }
+    if(left_defect3){
+      cords.value[index].right = 'Красный свет (Дефект на ' + (radar.value * text.value / 1900 - 3) + ' см)'
+    }
+    if(left_defect2){
+      cords.value[index].right = 'Красный свет (Дефект на ' + (radar.value * text.value / 1900 - 2) + ' см)'
+    }
+    if(left_defect1){
+      cords.value[index].right = 'Красный свет (Дефект на ' + (radar.value * text.value / 1900 - 1) + ' см)'
+    }
+    if(left_defect0){
+      cords.value[index].right = 'Красный свет (Дефект на ' + (radar.value * text.value / 1900) + ' см)'
     }
   }, 300)
 }
 
 function getColor(cord, side) {
-  if (cord[side] === 'Желтый свет (Дефект в пределах от 5 до 10 см)') {
-    return 'yellow';
-  }
-  if (cord[side] === 'Красный свет (Дефект в пределах от 0 до 5 см)') {
+  if (cord[side] === 'Красный свет (Дефект на ' + (cord.x * text.value / 1900) + ' см)') {
     return 'red'
   }
-  return 'green';
+  if (cord[side] === 'Красный свет (Дефект на ' + (cord.x * text.value / 1900 + 1) + ' см)') {
+    return 'red'
+  }
+  if (cord[side] === 'Красный свет (Дефект на ' + (cord.x * text.value / 1900 + 2) + ' см)') {
+    return 'red'
+  }
+  if (cord[side] === 'Красный свет (Дефект на ' + (cord.x * text.value / 1900 + 3) + ' см)') {
+    return 'red'
+  }
+  if (cord[side] === 'Красный свет (Дефект на ' + (cord.x * text.value / 1900 + 4) + ' см)') {
+    return 'red'
+  }
+  if (cord[side] === 'Желтый свет (Дефект на ' + (cord.x * text.value / 1900 + 5) + ' см)') {
+    return 'yellow';
+  }
+  if (cord[side] === 'Желтый свет (Дефект на ' + (cord.x * text.value / 1900 + 6) + ' см)') {
+    return 'yellow';
+  }
+  if (cord[side] === 'Желтый свет (Дефект на ' + (cord.x * text.value / 1900 + 7) + ' см)') {
+    return 'yellow';
+  }
+  if (cord[side] === 'Желтый свет (Дефект на ' + (cord.x * text.value / 1900 + 8) + ' см)') {
+    return 'yellow';
+  }
+  if (cord[side] === 'Желтый свет (Дефект на ' + (cord.x * text.value / 1900 + 9) + ' см)') {
+    return 'yellow';
+  }
+  if (cord[side] === 'Желтый свет (Дефект на ' + (cord.x * text.value / 1900 - 9) + ' см)') {
+    return 'yellow';
+  }
+  if (cord[side] === 'Желтый свет (Дефект на ' + (cord.x * text.value / 1900 - 8) + ' см)') {
+    return 'yellow';
+  }
+  if (cord[side] === 'Желтый свет (Дефект на ' + (cord.x * text.value / 1900 - 7) + ' см)') {
+    return 'yellow';
+  }
+  if (cord[side] === 'Желтый свет (Дефект на ' + (cord.x * text.value / 1900 - 6) + ' см)') {
+    return 'yellow';
+  }
+  if (cord[side] === 'Желтый свет (Дефект на ' + (cord.x * text.value / 1900 - 5) + ' см)') {
+    return 'yellow';
+  }
+  if (cord[side] === 'Красный свет (Дефект на ' + (cord.x * text.value / 1900 - 4) + ' см)') {
+    return 'red'
+  }
+  if (cord[side] === 'Красный свет (Дефект на ' + (cord.x * text.value / 1900 - 3) + ' см)') {
+    return 'red'
+  }
+  if (cord[side] === 'Красный свет (Дефект на ' + (cord.x * text.value / 1900 - 2) + ' см)') {
+    return 'red'
+  }
+  if (cord[side] === 'Красный свет (Дефект на ' + (cord.x * text.value / 1900 - 1) + ' см)') {
+    return 'red'
+  }
+    return 'green';
 }
 </script>
 
 <template>
   <div class="privet">
     <p>Приветствую, посетитель. Этот сайт был создан и предназначен для нахождения дефектов на рельсе.</p>
-    <p>Для начала напиши длину рельсы. Затем напишите координату дефекта. Нажмите кнопу "Сканирование" и ожидайте.</p>
+    <p>Для начала напиши длину рельсы. Затем напишите координаты дефектов. Нажмите кнопу "Сканирование" и ожидайте.</p>
   </div>
    <div style="display: flex; align-items: center;" class="priv">
      Напишите длину рельса: <q-input  v-model="text" class="inp p"  />см
 
    </div>
   <div style="display: flex; align-items: center;" class="priv">
-    Напишите координат дефекта: <q-input v-model="text1" class="inp p" />см
+    Напишите координаты дефектов: <q-input v-model="text1" class="inp p" />см
   </div>
   <q-btn color="orange" label="Сканирование" @click="proverka"></q-btn>
   <div
@@ -156,7 +307,7 @@ function getColor(cord, side) {
    v-for="(cord, index) in cords"
   >
 
-    <div class="priv">Шаг {{index + 1}} : позиция {{ (`${ ((cord.x * text) / 1900).toFixed(0) }`) }}</div>
+    <div class="priv">Шаг {{index + 1}} : позиция {{ (`${ ((cord.x * text) / 1900).toFixed(0) }`) }} см</div>
     <div class="priv">Левая лампа: {{ cord.right }}</div>
     <div class="priv">Правая лампа: {{ cord.left }}</div>
   </div>
