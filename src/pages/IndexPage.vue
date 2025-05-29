@@ -14,14 +14,20 @@ function proverka(){
   if (isNaN(text.value) === true || Number.isInteger(+text.value) === false) {
     return alert('Напишите длину рельса целым числом')
   }
+  // if (Number.isInteger(+text1.value) === false) {
+  //   return alert('Напишите координаты дефектов целым числом')
+  // }
   if (text.value < 0) {
     return alert('Напишите длину рельса положительным числом')
   }
   if (text1.value===''){
-    return alert('Напишите координат дефекта')
+    return alert('Напишите координаты дефектов')
   }
   let tchki = text1.value.split(', ')
   for (let tochka of tchki) {
+    if (Number.isInteger(+tochka) === false) {
+      return alert('Напишите координаты дефектов целым числом')
+    }
     if (+tochka >= +text.value || +tochka <= 0) {
       return alert('Дефект на ' + tochka + ' см не находится на рельсе')
     }
